@@ -1,6 +1,4 @@
-# Common
-All files to be placed in /lib/archlabs/common/
-
-These are crucial for some of the pipemenus and scripts to work.
-
-The package "yad" needs to be installed from the AUR.
+# ArchLabs Common
+  All .txt files to be placed in /lib/archlabs/common/
+  al-include.cfg is crucial for some of the scripts to work.
+  it must be placed in /usr/share/archlabs/docs/
