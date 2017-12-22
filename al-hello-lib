@@ -235,7 +235,7 @@ package_Operation() {
         done
     fi
     # If answer to remove was yes or if $2 is 'None'.. add $3 & $4 to removal list
-    if grep -q '[yY1]' <<< "$2" || [[ "$2" == "None" ]]; then
+    if grep -q '[yY1]' <<< "$1" || grep -q '[yY1]' <<< "$2"; then
         if ! grep -q "$3" <<< "${rPkgs[@]}" && [[ "$3" ]]; then
             rPkgs+=($3)
             if [[ "$4" ]] && ! grep -q "$4" <<< "${rPkgs[@]}"; then

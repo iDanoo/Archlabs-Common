@@ -261,7 +261,7 @@ default_App_Dialogs() {
         create_Dialog burner "Disc Burners"
         create_Dialog notify "XFCE Notification Daemon.. Default is Dunst"
         create_Dialog powermanager "Install XFCE Power Manager"
-        create_Dialog pac "Install Pamac Package Manager"
+        create_Dialog pamac "Install Pamac Package Manager"
     fi
     create_Dialog gnomed "Install Gnome Disks & System Monitor"
     create_Dialog catsearch "Install Catfish File Search"
