@@ -217,7 +217,7 @@ default_App_Dialogs() {
     create_Dialog video "Video Editors"
     get=("Gimp\t\t-  GNU Image Manipulation Program"
          "Inkscape\t-  Professional vector graphics editor"
-         "Krita\t-     Edit and paint images")
+         "Krita\t-  Edit and paint images")
     create_Dialog image "Image Editors"
     get=("Libre-Office\t-  Full featured office suite"
          "Abiword\t-  Fully-featured word processor"
