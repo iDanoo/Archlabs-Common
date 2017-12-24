@@ -82,7 +82,7 @@ create_Dialog() {
         *) H=8
     esac
     # greater than 1 list
-    if [ ${#get[@]} -gt 1 ]; then
+    if [ ${#get[@]} -gt 1 ] || grep -q 'login session' <<< "$2"; then
         echo -e "\n\n\n\t$2\n"
         for ((n=1; n<=${#get[@]}; n++)); do
             echo -e "\n\t${b}${n}${red}) ${reg}${get[$(($n - 1))]}"
@@ -99,7 +99,7 @@ create_Dialog() {
         fi
     fi
     read -r "$1"  # take input
-    if [[ ${#get[@]} -lt 2 ]]; then
+    if [[ ${#get[@]} -lt 2 ]] && ! grep -q 'session' <<< "$2"; then
         case ${!1} in
             y|Y|YES|yes|1)
                 :  # No-op on success.. More code may go here in the future if needed
@@ -114,7 +114,7 @@ create_Dialog() {
                 draw_box $R $C 8 $W $col; sleep 3
                 create_Dialog "$1" "$2"
         esac
-    elif [[ ${#get[@]} -ge 2 ]] && grep -q "[1-${#get[@]}]" <<< "${!1}"; then
+    elif grep -q "[1-${#get[@]}]" <<< "${!1}"; then
         : # No-op on success..  In the future I intend to move more code here if needed
     elif grep -q '[nN0]' <<< "${!1}"; then
         clear; echo -e "\n\n\n\tSkipping Step.."
@@ -316,6 +316,7 @@ setup_swapfile() {
 # Called directly if chosen to install bluetooth support
 # takes no args, must be run after dialog
 setup_Bluetooth() {
+    clear
     sudo pacman -S bluez bluez-utils pulseaudio-bluetooth bluez-firmware blueman --needed --noconfirm
     sudo modprobe btusb
     sudo systemctl enable bluetooth.service
@@ -328,6 +329,7 @@ setup_Bluetooth() {
 # Called directly if chosen to install printer support
 # takes no args, must be run after dialog
 setup_Printer() {
+    clear
     sudo pacman -S cups cups-filters cups-pdf cups-pk-helper bluez-cups foomatic-db \
          foomatic-db-ppds system-config-printer gutenprint hplip ghostscript gsfonts \
          foomatic-db-gutenprint-ppds foomatic-db-nonfree-ppds --needed --noconfirm
