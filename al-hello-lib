@@ -87,8 +87,13 @@ create_Dialog() {
         for ((n=1; n<=${#get[@]}; n++)); do
             echo -e "\n\t${b}${n}${red}) ${reg}${get[$(($n - 1))]}"
         done
-        echo -e "\n\t${b}0${red})${reg}\t\t-  Skip This Step"
-        draw_box $R $C $H $W $col; printf "\n\n: "
+        if grep -q 'login session' <<< "$2"; then
+            echo -e "\n\t${b}0${red})${reg} Openbox\t-  Skip this step and stay with Openbox"
+            draw_box $R $C 12 $W $col; printf "\n\n: "
+        else
+            echo -e "\n\t${b}0${red})${reg}\t\t-  Skip This Step"
+            draw_box $R $C $H $W $col; printf "\n\n: "
+        fi
     else
         # 1 or less list is yes/no
         printf "\n\n\n\t$2?  ${red}[${b}y${red}/${b}N${red}]${reg}: "
