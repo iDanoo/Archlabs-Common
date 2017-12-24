@@ -203,9 +203,6 @@ default_App_Dialogs() {
          "Nautilus\t-  Access and organize files"
          "Nemo\t\t-  Cinnamon file manager, a fork of nautilus")
     create_Dialog filemanager "Available File Managers.. Thunar is the default"
-    if ! grep -q '4' <<< "$window_manager" && grep -q '[1-3]' <<< "$filemanager"; then
-        create_Dialog rmthunar "Want to uninstall Thunar"
-    fi
     get=("SSR\t\t-  A feature-rich screen recorder"
          "OBS\t\t-  Free opensource streaming/recording software"
          "Guvcview\t-  Capture video from camera devices"
@@ -312,7 +309,7 @@ main_Dialogs() {
                 _sessions+=("i3")
             fi
             if grep -q '4' <<< "$window_manager"; then
-                get+=("Xfce\t-  A lightweight and modular DE based on GTK+ 2")
+                get+=("Xfce4\t-  A lightweight and modular DE based on GTK+ 2")
                 _sessions+=("xfce")
             fi
             create_Dialog session "Which would you like as your login session?  Only pick one"
