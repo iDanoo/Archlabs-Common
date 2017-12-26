@@ -109,24 +109,24 @@ create_Dialog() {
             y|Y|YES|yes|1)
                 :  # No-op on success.. More code may go here in the future if needed
                 ;;
-            n|N|NO|no|0)
+            n|N|NO|no|0|"")
                 clear; echo -e "\n\n\n\tSkipping Step.."
                 draw_box $R $C 8 $W $col; sleep 1
                 ;;
             *)
                 clear; echo -e "\n\n\n\tWrong Response
-                \n\tTo skip any step enter one of the following ${red}0 ${reg}or ${red}n${reg} and press ${b}[${red}Enter${b}]${reg}"
+                \n\tTo skip this step enter ${red}0 ${reg}or ${red}n${reg} or just ${b}[${red}Enter${b}]${reg}"
                 draw_box $R $C 8 $W $col; sleep 3
                 create_Dialog "$1" "$2"
         esac
     elif grep -q "[1-${#get[@]}]" <<< "${!1}"; then
         : # No-op on success..  In the future I intend to move more code here if needed
-    elif grep -q '[nN0]' <<< "${!1}"; then
+    elif grep -q '[nN0]' <<< "${!1}" || [[ "${!1}" = "" ]]; then
         clear; echo -e "\n\n\n\tSkipping Step.."
         draw_box $R $C 8 $W $col; sleep 1
     else
         clear; echo -e "\n\n\n\tWrong Response
-        \n\tTo skip any step enter one of the following ${red}0 ${reg}or ${red}n${reg} and press ${b}[${red}Enter${b}]${reg}$e_msg"
+        \n\tTo skip this step enter ${red}0 ${reg}or ${red}n${reg} or just ${b}[${red}Enter${b}]${reg}$e_msg"
         draw_box $R $C 8 $W $col; sleep 3
         create_Dialog "$1" "$2"
     fi
@@ -134,7 +134,7 @@ create_Dialog() {
     echo -e "\nMain Question:\t$2\nPackage Array:\t${get[@]}\nTotal Options:\t${#get[@]}\nInput Name:\t$1\nUser Answer:\t${!1}" >>$LOG 2>&1
     # reset everything just to be sure
     H=12
-    if grep -q '[nN0]' <<< "${!1}"; then
+    if grep -q '[nN0]' <<< "${!1}" || [[ "${!1}" = "" ]]; then
         unset $1
     fi
     unset get
