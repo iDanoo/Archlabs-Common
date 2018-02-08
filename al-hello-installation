@@ -337,12 +337,12 @@ install_Selected_Packages() {
     sudo pacman -Scc --noconfirm
     echo -e "\nInstall List:\t${Pkgs[@]}\nRemove List:\t${rPkgs[@]}" >>$LOG 2>&1
 
-    for i in ${rPkgs[@]}; do
+    for i in "${rPkgs[@]}"; do
         sudo pacman -Rns $i --noconfirm
     done
 
     # check pacman for each package
-    for i in ${Pkgs[@]}; do
+    for i in "${Pkgs[@]}"; do
         if pacman -Ssq ^$i$ &>/dev/null; then
             sudo pacman -S $i --needed --noconfirm
         else  # else use yaourt
