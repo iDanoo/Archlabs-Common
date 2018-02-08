@@ -79,59 +79,60 @@ setup_Default_Packages() {
 # takes no args, must be done after dialogs
 setup_Window_Manager() {
     # send it al off to the package_Operation to install our choices
-    install=("awesome" "bspwm sxhkd" "archlabs-i3-gaps i3status i3status perl-anyevent-i3"
-             "pamac-aur xfce4 xfce4-goodies xfce4-pulseaudio-plugin")
+    install=("awesome" "bspwm" "i3-gaps" "xfce4")
     package_Operation "$window_manager"
 
     # Make sure that the config directories exist for chosen wm
     # for wm that arent chosen, remove their config from $HOME/.config
     _names=("awesome" "bspwm" "i3" "xfce4")
     for ((x=1; x<=${#_names[@]}; x++)); do
+        y=$((x - 1))  # Fix for counting from 1 & arrays indexing from 0
         if grep -q "$x" <<< "$window_manager"; then
-            echo -e "\nChosen Window Manager:\t${_names[$(($x - 1))]}" >>$LOG 2>&1
-            if grep -q 'xfce4' <<< "${_names[$(($x - 1))]}"; then
+            echo -e "\nChosen Window Manager:\t${_names[$y]}" >>"$LOG" 2>&1
+            if grep -q 'xfce4' <<< "${_names[$y]}"; then
                 if ! [ -d "$CONF_PATH/xfce4/al-xfce-configs" ]; then
-                    echo -e "Getting Missing Configs:\t${_names[$(($x - 1))]}" >>$LOG 2>&1
+                    echo -e "Getting Missing Configs:\t${_names[$y]}" >>"$LOG" 2>&1
                     cp -rf /etc/skel/.config/xfce4/al-xfce-configs "$CONF_PATH/xfce4/"
                 fi
-                cp -rf "$CONF_PATH/xfce4"/al-xfce-configs/* "$CONF_PATH/xfce4/"
-                rm -rf "$CONF_PATH/xfce4"/al-xfce-configs
+                cp -rf "$CONF_PATH"/xfce4/al-xfce-configs/* "$CONF_PATH/xfce4/"
+                rm -rf "$CONF_PATH"/xfce4/al-xfce-configs
                 xfconf-query -c xfce4-desktop -v --create -p /desktop-icons/style -t int -s 0
-            elif grep -q 'bspwm' <<< "${_names[$(($x - 1))]}"; then
-                echo -e "Getting Missing Configs:\t${_names[$(($x - 1))]}" >>$LOG 2>&1
+            elif grep -q 'bspwm' <<< "${_names[$y]}"; then
+                echo -e "Getting Missing Configs:\t${_names[$y]}" >>"$LOG" 2>&1
                 if ! [ -d "$CONF_PATH/bspwm" ]; then
                     cp -rf /etc/skel/.config/bspwm "$CONF_PATH/"
                 fi
                 if ! [ -d "$CONF_PATH/sxhkd" ]; then
                     cp -rf /etc/skel/.config/sxhkd "$CONF_PATH/"
                 fi
-            elif ! [ -d "$CONF_PATH/${_names[$(($x - 1))]}" ]; then
-                echo -e "Getting Missing Configs:\t${_names[$(($x - 1))]}" >>$LOG 2>&1
-                cp -rf /etc/skel/.config/"${_names[$(($x - 1))]}" "$CONF_PATH/"
+            elif ! [ -d "$CONF_PATH/${_names[$y]}" ]; then
+                echo -e "Getting Missing Configs:\t${_names[$y]}" >>"$LOG" 2>&1
+                cp -rf /etc/skel/.config/"${_names[$y]}" "$CONF_PATH/"
             fi
-        elif [ -d "$CONF_PATH/${_names[$(($x - 1))]}" ]; then
-            echo -e "Removing Configs:\t\t${_names[$(($x - 1))]}" >>$LOG 2>&1
-            if grep -q 'bspwm' <<< "${_names[$(($x - 1))]}"; then
-                rm -rf "$CONF_PATH/${_names[$(($x - 1))]}"
+        elif [ -d "$CONF_PATH/${_names[$y]}" ]; then
+            echo -e "Removing Configs:\t\t${_names[$y]}" >>"$LOG" 2>&1
+            if grep -q 'bspwm' <<< "${_names[$y]}"; then
+                rm -rf "$CONF_PATH/${_names[$y]:?}"
                 if [ -d "$CONF_PATH/sxhkd" ]; then
                     rm -rf "$CONF_PATH/.config/sxhkd"
                 fi
-            elif grep -q 'xfce4' <<< "${_names[$(($x - 1))]}"; then
+            elif grep -q 'xfce4' <<< "${_names[$y]}"; then
                 if [ -d "$CONF_PATH/xfce4/al-xfce-configs" ]; then
                     rm -rf "$CONF_PATH/xfce4/al-xfce-configs"
                 fi
             else
-                rm -rf "$CONF_PATH/${_names[$(($x - 1))]}"
+                rm -rf "$CONF_PATH/${_names[$y]:?}"
             fi
         fi
     done
 
     # Session setup
     for ((x=1; x<=${#_sessions[@]}; x++)); do
+        y=$((x - 1))  # Fix for counting from 1 & arrays indexing from 0
         if grep -q "$x" <<< "$session"; then
-            sudo sed -i "/user-session=/ c user-session=${_sessions[$(($x - 1))]}" /etc/lightdm/lightdm.conf
-            sudo sed -i "/autologin-session=/ c autologin-session=${_sessions[$(($x - 1))]}" /etc/lightdm/lightdm.conf
-            echo -e "\nChanging Login Session:\t${_sessions[$(($x - 1))]}" >>$LOG 2>&1
+            sudo sed -i "/user-session=/ c user-session=${_sessions[$y]}" /etc/lightdm/lightdm.conf
+            sudo sed -i "/autologin-session=/ c autologin-session=${_sessions[$y]}" /etc/lightdm/lightdm.conf
+            echo -e "\nChanging Login Session:\t${_sessions[$y]}" >>"$LOG" 2>&1
             break
         fi
     done
@@ -277,7 +278,8 @@ default_App_Dialogs() {
 main_Dialogs() {
     # if not a vm remove virtual utils
     if [ -z "${VM}" ]; then
-        clear; echo -e "\n\n\n\t${g}System is not a Virtual Machine\n\n\tQueueing Removal of Virtualbox Guest Modules...${reg}"
+        clear; echo -e "\n\n\n\t${g}System is not a Virtual Machine
+        \n\tQueueing Removal of Virtualbox Guest Modules...${reg}"
         draw_box $R $C 8 $W $col; echo -e "\n\n"; sleep 2
         if [ -e /etc/xdg/autostart/vboxclient.desktop ]; then
             sudo rm -f /etc/xdg/autostart/vboxclient.desktop
@@ -323,9 +325,17 @@ main_Dialogs() {
         default_App_Dialogs
     fi
 
-    # run bluetooth and printer dialogs
     create_Dialog btooth "Setup & Install Support for Bluetooth"
     create_Dialog printer "Setup & Install Support for Printers"
+
+
+    if [ -z "${VM}" ]; then
+        create_Dialog lts_kernel "Switch to LTS kernel"
+        if grep -q '[yY1]' <<< "$lts_kernel"; then
+            setup_LTS_Kernel
+        fi
+    fi
+
 }
 
 # should be run after all dialogs and setup are done
@@ -335,21 +345,21 @@ main_Dialogs() {
 install_Selected_Packages() {
     sudo pacman -S base-devel --needed --noconfirm
     sudo pacman -Scc --noconfirm
-    echo -e "\nInstall List:\t${Pkgs[@]}\nRemove List:\t${rPkgs[@]}" >>$LOG 2>&1
+    echo -e "\nInstall List:\t${Pkgs[*]}\nRemove List:\t${rPkgs[*]}" >>"$LOG" 2>&1
 
-    for i in ${rPkgs[@]}; do
-        sudo pacman -Rns $i --noconfirm
+    for i in "${rPkgs[@]}"; do
+        sudo pacman -Rns "$i" --noconfirm
     done
 
     # check pacman for each package
-    for i in ${Pkgs[@]}; do
-        if pacman -Ssq ^$i$ &>/dev/null; then
-            sudo pacman -S $i --needed --noconfirm
+    for i in "${Pkgs[@]}"; do
+        if pacman -Ssq ^"$i"$ &>/dev/null; then
+            sudo pacman -S "$i" --needed --noconfirm
         else  # else use yaourt
-            if grep -q "linux-steam-integration" <<< $i; then  # special case to stop pgp bitching
-                yaourt --n-arg --skippgpcheck -S $i --needed --noconfirm
+            if grep -q "linux-steam-integration" <<< "$i"; then  # special case to stop pgp bitching
+                yaourt --n-arg --skippgpcheck -S "$i" --needed --noconfirm
             else
-                yaourt -S $i --needed --noconfirm
+                yaourt -S "$i" --needed --noconfirm
             fi
         fi
     done
