@@ -277,15 +277,15 @@ default_App_Dialogs() {
 # if certain conditions are met will vary the dialogs
 main_Dialogs() {
     # if not a vm remove virtual utils
-    if [ -z "${VM}" ]; then
+    if [ -z "${VM}" ] && sudo pacman -Qsq virtualbox &>/dev/null; then
         clear; echo -e "\n\n\n\t${g}System is not a Virtual Machine
         \n\tQueueing Removal of Virtualbox Guest Modules...${reg}"
         draw_box $R $C 8 $W $col; echo -e "\n\n"; sleep 2
         if [ -e /etc/xdg/autostart/vboxclient.desktop ]; then
             sudo rm -f /etc/xdg/autostart/vboxclient.desktop
         fi
-        if pacman -Q virtualbox-guest-modules-arch &>/dev/null; then
-            rPkgs+=("virtualbox-guest-utils virtualbox-guest-modules-arch")
+        if pacman -Qsq virtualbox &>/dev/null; then
+            rPkgs+=("$(sudo pacman -Qsq virtualbox)")
         fi
     fi
 

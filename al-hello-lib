@@ -331,6 +331,12 @@ setup_swapfile() {
 setup_LTS_Kernel() {
     clear
     sudo pacman -S linux-lts --noconfirm
+    if sudo pacman -Qsq virtualbox &>/dev/null; then
+        sudo pacman -Rns virtualbox-guest-utils virtualbox-guest-modules-arch --noconfirm
+        if [[ -e /etc/xdg/autostart/vboxclient.desktop ]]; then
+            sudo rm -f /etc/xdg/autostart/vboxclient.desktop
+        fi
+    fi
     sudo pacman -R linux --noconfirm
     sudo grub-mkconfig -o /boot/grub/grub.cfg
     clear; echo -e "\n\n\n\tLinux LTS Setup Complete\n\n\n\tPlease See: https://wiki.archlinux.org/index.php/Kernels"
