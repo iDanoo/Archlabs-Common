@@ -196,7 +196,7 @@ package_Operation() {
                 elif grep -q "mupdf" <<< "${install[$y]}"; then
                     Pkgs+=("mupdf-tools" "libmupdf")
                 elif grep -q "i3-gaps" <<< "${install[$y]}"; then
-                    Pkgs+=("i3-status" "perl-anyevent-i3")
+                    Pkgs+=("i3status" "perl-anyevent-i3")
                 elif grep -q "xfce4" <<< "${install[$y]}"; then
                     Pkgs+=("pamac-aur" "xfce4-goodies" "xfce4-pulseaudio-plugin")
                 elif grep -q "bspwm" <<< "${install[$y]}"; then
