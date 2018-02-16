@@ -14,7 +14,7 @@ setup_Default_Packages() {
     install=("google-chrome" "chromium" "opera" "qutebrowser")
     package_Operation "$browser" "$rmfirefox" "firefox"
     install=("google-talkplugin")
-    package_Operation "$google-talk" "None"
+    package_Operation "$googletalk" "None"
     install=("flashplugin")
     package_Operation "$flash" "None"
     install=("atom" "sublime-text-dev" "emacs" "mousepad")
@@ -158,7 +158,7 @@ default_App_Dialogs() {
     create_Dialog browser "Available Web Browsers.. Firefox is the default"
     if grep -q '[1-4]' <<< "$browser"; then
         if grep -q '1' <<< "$browser"; then
-            create_Dialog google-talk "Install google talk plugin"
+            create_Dialog googletalk "Install google talk plugin"
         fi
         create_Dialog rmfirefox "Want to uninstall Firefox"
         if ! [[ "$browser" == "1" ]] || ! grep -q '[yY1]' <<< "$rmfirefox"; then
